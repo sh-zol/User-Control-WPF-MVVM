@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -92,7 +93,7 @@ namespace wpf_mvvm_test.ViewModels
         private void LoadUsers()
         {
             Users.Clear();
-            foreach (var user in _database.Users.ToList())
+            foreach (var user in _database.Users.AsNoTracking().ToList())
             {
                 Users.Add(user);
             }
@@ -118,15 +119,35 @@ namespace wpf_mvvm_test.ViewModels
 
         private void AddUser(object obj)
         {
+            //var newUser = new User
+            //{
+            //    Name = /* "empty string" */ EditingUser.Name,
+            //    Email =/*"emptystringemail@gmail.com",*/ EditingUser.Email,
+            //    Password =/*"12345688",*/ EditingUser.Password
+            //};
+            //_database.Users.Add(newUser);
+            //_database.SaveChanges();
+            //LoadUsers();
+
+            if (EditingUser == null ||
+            string.IsNullOrWhiteSpace(EditingUser.Name) ||
+            string.IsNullOrWhiteSpace(EditingUser.Email) ||
+            string.IsNullOrWhiteSpace(EditingUser.Password))
+            {
+                throw new InvalidOperationException("EditingUser is not properly initialized.");
+            }
+
             var newUser = new User
             {
                 Name = EditingUser.Name,
                 Email = EditingUser.Email,
                 Password = EditingUser.Password
             };
+
             _database.Users.Add(newUser);
             _database.SaveChanges();
             LoadUsers();
+
         }
 
 

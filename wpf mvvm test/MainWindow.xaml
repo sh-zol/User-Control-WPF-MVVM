@@ -24,9 +24,9 @@
         </ListView>
 
         <TextBox Height="23" HorizontalAlignment="Left" Margin="80,0,0,0" Name="txtId" VerticalAlignment="Center" Width="178" Text="{Binding EditingUser.Id}" Visibility="Collapsed" />
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="80,53,0,0" Name="txtName" VerticalAlignment="Top" Width="178" Text="{Binding EditingUser.Name}" Grid.RowSpan="2" />
-        <TextBox Grid.Row="1" Height="24" HorizontalAlignment="Left" Margin="80,28,0,0" Name="txtEmail" VerticalAlignment="Top" Width="178" Text="{Binding EditingUser.Email}" />
-        <TextBox Grid.Row="1" Height="22" HorizontalAlignment="Left" Margin="80,62,0,0" Name="txtPassword" VerticalAlignment="Top" Width="178" Text="{Binding EditingUser.Password}" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="80,53,0,0" Name="txtName" VerticalAlignment="Top" Width="178" Text="{Binding EditingUser.Name, UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2" />
+        <TextBox Grid.Row="1" Height="24" HorizontalAlignment="Left" Margin="80,28,0,0" Name="txtEmail" VerticalAlignment="Top" Width="178" Text="{Binding EditingUser.Email, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBox Grid.Row="1" Height="22" HorizontalAlignment="Left" Margin="80,62,0,0" Name="txtPassword" VerticalAlignment="Top" Width="178" Text="{Binding EditingUser.Password, UpdateSourceTrigger=PropertyChanged}" />
         <Label Content="Id" HorizontalAlignment="Left" Margin="32,21,0,329" Name="label1" Grid.RowSpan="2" />
         <Label Content="Name" Grid.Row="1" Height="28" HorizontalAlignment="Left" Margin="20,26,0,0" Name="label2" VerticalAlignment="Top" />
         <Label Content="Email" Height="28" HorizontalAlignment="Left" Margin="23,57,0,0" Name="label3" VerticalAlignment="Top" Grid.RowSpan="2" />
@@ -35,7 +35,7 @@
         <Button Content="Add" Height="22" Width="100" Margin="330,42,0,0" Name="btnAdd" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding Path=AddCommand}"/>
         <Button Content="Delete" Height="23" Width="100" Margin="330,87,0,0" Name="btnDelete" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.RowSpan="2" Command="{Binding Path=DeleteCommand}" />
         <Button Content="Search" Height="22" Width="100" Margin="678,49,0,0" x:Name="btnAdd_Copy" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding SearchCommand}" Grid.RowSpan="2"/>
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="483,48,0,0" x:Name="txtName_Copy" VerticalAlignment="Top" Width="178" Text="{Binding SearchQuery,UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="483,48,0,0" x:Name="txtSearch" VerticalAlignment="Top" Width="178" Text="{Binding SearchQuery,UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2" />
         <Label Content="Search" Height="28" HorizontalAlignment="Left" Margin="438,43,0,0" x:Name="label3_Copy" VerticalAlignment="Top" Grid.RowSpan="2" />
         <StackPanel Orientation="Horizontal" Margin="10"/>
         <ListView Name="UsrGrid" Grid.Row="1" Margin="461,16,16,225" ItemsSource="{Binding FilteredUsers}" SelectedItem="{Binding SelectedUser}">
@@ -48,6 +48,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <Button Content="Clear" Height="22" Width="100" Margin="310,109,0,0" x:Name="btnClear" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="1" Click="btnClear_Click"/>
 
     </Grid>
 </Window>
