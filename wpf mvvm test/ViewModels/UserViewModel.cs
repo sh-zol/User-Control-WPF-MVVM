@@ -17,6 +17,7 @@ namespace wpf_mvvm_test.ViewModels
         private AppDBContext _database;
         private User _selectingUser;
         private User _editingUser;
+        private string _searchQuery;
         public UserViewModel()
         {
             _database = new AppDBContext();
@@ -26,10 +27,13 @@ namespace wpf_mvvm_test.ViewModels
             UpdateCommand = new RelayCommands(UpdateUser);
             AddCommand = new RelayCommands(AddUser);
             DeleteCommand = new RelayCommands(DeleteUser);
-
+            SearchCommand = new RelayCommands(SearchWord);
         }
 
         public ObservableCollection<User> Users { get; set; } = new ObservableCollection<User>();
+
+        public ObservableCollection<User> FilteredUsers { get; set; } = new ObservableCollection<User>();
+
         public User SelectedUser
         {
             get
@@ -66,9 +70,24 @@ namespace wpf_mvvm_test.ViewModels
             }
         }
 
+        public string SearchQuery
+        {
+            get
+            {
+                return _searchQuery;
+            }
+            set
+            {
+                _searchQuery = value;
+                OnPropertyChanged(nameof(SearchQuery));
+                
+            }
+        }
+
         public ICommand UpdateCommand { get; }
         public ICommand AddCommand { get; }
         public ICommand DeleteCommand { get; }
+        public ICommand SearchCommand { get; }
 
         private void LoadUsers()
         {
@@ -127,6 +146,20 @@ namespace wpf_mvvm_test.ViewModels
                     throw new Exception("User doesn't exist");
                 }
             }
+        }
+
+        private void SearchWord(object words)
+        {
+            if (string.IsNullOrEmpty(SearchQuery))
+            {
+                FilteredUsers = new ObservableCollection<User>(Users);
+            }
+            else
+            {
+                FilteredUsers = new ObservableCollection<User>(
+                    Users.Where(x => x.Name.Contains(SearchQuery)));
+            }
+            OnPropertyChanged(nameof(FilteredUsers));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:wpf_mvvm_test"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="967">
     <Grid Margin="0,0,0,20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -31,8 +31,23 @@
         <Label Content="Name" Grid.Row="1" Height="28" HorizontalAlignment="Left" Margin="20,26,0,0" Name="label2" VerticalAlignment="Top" />
         <Label Content="Email" Height="28" HorizontalAlignment="Left" Margin="23,57,0,0" Name="label3" VerticalAlignment="Top" Grid.RowSpan="2" />
         <Label Content="Password" Grid.Row="1" Height="28" HorizontalAlignment="Left" Margin="12,59,0,0" Name="label4" VerticalAlignment="Top" />
-        <Button Content="Update" Grid.Row="1" Height="23" HorizontalAlignment="Left" Margin="326,59,0,0" Name="btnUpdate" VerticalAlignment="Top" Width="140" Command="{Binding Path=UpdateCommand}" />
+        <Button Content="Update" Grid.Row="1" Height="23" HorizontalAlignment="Left" Margin="290,57,0,0" Name="btnUpdate" VerticalAlignment="Top" Width="140" Command="{Binding Path=UpdateCommand}" />
         <Button Content="Add" Height="22" Width="100" Margin="330,42,0,0" Name="btnAdd" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding Path=AddCommand}"/>
         <Button Content="Delete" Height="23" Width="100" Margin="330,87,0,0" Name="btnDelete" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.RowSpan="2" Command="{Binding Path=DeleteCommand}" />
+        <Button Content="Search" Height="22" Width="100" Margin="678,49,0,0" x:Name="btnAdd_Copy" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding SearchCommand}" Grid.RowSpan="2"/>
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="483,48,0,0" x:Name="txtName_Copy" VerticalAlignment="Top" Width="178" Text="{Binding SearchQuery,UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2" />
+        <Label Content="Search" Height="28" HorizontalAlignment="Left" Margin="438,43,0,0" x:Name="label3_Copy" VerticalAlignment="Top" Grid.RowSpan="2" />
+        <StackPanel Orientation="Horizontal" Margin="10"/>
+        <ListView Name="UsrGrid" Grid.Row="1" Margin="461,16,16,225" ItemsSource="{Binding FilteredUsers}" SelectedItem="{Binding SelectedUser}">
+            <ListView.View>
+                <GridView x:Name="gridTest">
+                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}" Width="50" />
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="50" />
+                    <GridViewColumn Header="Email" DisplayMemberBinding="{Binding Email}" Width="50" />
+                    <GridViewColumn Header="Password" DisplayMemberBinding="{Binding Password}" Width="50" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+
     </Grid>
 </Window>
