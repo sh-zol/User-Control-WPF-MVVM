@@ -32,7 +32,8 @@ namespace wpf_mvvm_test.ViewModels
             // _database.Database.EnsureCreated();
             LoadUsers();
             EditingUser = new User();
-            StartTokenGeneration();
+            //  StartTokenGeneration();
+            StartTokenGenerator();
             UpdateCommand = new RelayCommands(UpdateUser);
             AddCommand = new RelayCommands(AddUser);
             DeleteCommand = new RelayCommands(DeleteUser);
@@ -194,45 +195,67 @@ namespace wpf_mvvm_test.ViewModels
         }
 
         #endregion
+        #region Token Gen with threads
+        //private void StartTokenGeneration()
+        //{
+        //    if (_isGenerating) return;
+        //    _isGenerating = true;
+        //    _thread = new Thread(() =>
+        //        {
+        //            int tokensPerSecond = 10;
+        //            // = int.Parse(ConfigurationManager.AppSettings["TokensPerSecond"]);
+        //            //if (!int.TryParse(ConfigurationManager.AppSettings["TokensPerSecond"], out tokensPerSecond))
+        //            //{
+        //            //    tokensPerSecond = 1;
+        //            //    throw new Exception("problem in app.config");
+        //            //}
+        //            while (_isGenerating)
+        //            {
+        //                for(int i =0; i < tokensPerSecond; i++)
+        //                {
+        //                    _tokenQueue.Enqueue(
+        //                        new Token
+        //                        {
+        //                            Value = Guid.NewGuid().ToString()
+        //                        }
+        //                        );
+        //                }
+        //                Thread.Sleep(1000);
+        //            }
+        //        }
+        //        );
+        //    _thread.Start();
+        //}
 
-        private void StartTokenGeneration()
+        //public void StopTokenGeneration()
+        //{
+        //    _isGenerating = false;
+        //    if(_thread != null && _thread.IsAlive)
+        //    {
+        //        _thread.Join();
+        //    }
+        //}
+        #endregion
+
+        private void StartTokenGenerator()
         {
             if (_isGenerating) return;
             _isGenerating = true;
-            _thread = new Thread(() =>
+            Task.Run(async () => {
+                int tokensPerSecond = 10;
+                while (_isGenerating)
                 {
-                    int tokensPerSecond = 10;
-                    // = int.Parse(ConfigurationManager.AppSettings["TokensPerSecond"]);
-                    //if (!int.TryParse(ConfigurationManager.AppSettings["TokensPerSecond"],out tokensPerSecond))
-                    //{
-                    //    tokensPerSecond = 1;
-                    //    throw new Exception("problem in app.config");
-                    //}
-                    while (_isGenerating)
+                    for(int i = 0; i < tokensPerSecond; i++)
                     {
-                        for(int i =0; i < tokensPerSecond; i++)
+                        _tokenQueue.Enqueue(new Token
                         {
-                            _tokenQueue.Enqueue(
-                                new Token
-                                {
-                                    Value = Guid.NewGuid().ToString()
-                                }
-                                );
-                        }
-                        Thread.Sleep(1000);
+                            Value = Guid.NewGuid().ToString(),
+                        });
                     }
+                    await Task.Delay(1000);
                 }
-                );
-            _thread.Start();
-        }
-
-        public void StopTokenGeneration()
-        {
-            _isGenerating = false;
-            if(_thread != null && _thread.IsAlive)
-            {
-                _thread.Join();
-            }
+                }
+            );
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

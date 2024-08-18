@@ -46,7 +46,7 @@ namespace wpf_mvvm_test
             var model = this.DataContext as UserViewModel;
             if(model != null )
             {
-                model.StopTokenGeneration();
+               // model.StopTokenGeneration();
             }
         }
     }
