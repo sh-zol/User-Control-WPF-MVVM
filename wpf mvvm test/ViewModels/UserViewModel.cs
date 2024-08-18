@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using wpf_mvvm_test.DB;
@@ -19,12 +22,17 @@ namespace wpf_mvvm_test.ViewModels
         private User _selectingUser;
         private User _editingUser;
         private string _searchQuery;
+        private readonly ConcurrentQueue<Token> _tokenQueue = new ConcurrentQueue<Token>();
+        private bool _isGenerating = false;
+        private Thread _thread;
+
         public UserViewModel()
         {
             _database = new AppDBContext();
-           // _database.Database.EnsureCreated();
+            // _database.Database.EnsureCreated();
             LoadUsers();
-
+            EditingUser = new User();
+            StartTokenGeneration();
             UpdateCommand = new RelayCommands(UpdateUser);
             AddCommand = new RelayCommands(AddUser);
             DeleteCommand = new RelayCommands(DeleteUser);
@@ -90,6 +98,7 @@ namespace wpf_mvvm_test.ViewModels
         public ICommand DeleteCommand { get; }
         public ICommand SearchCommand { get; }
 
+        #region Queries
         private void LoadUsers()
         {
             Users.Clear();
@@ -119,6 +128,7 @@ namespace wpf_mvvm_test.ViewModels
 
         private void AddUser(object obj)
         {
+            #region Comment
             //var newUser = new User
             //{
             //    Name = /* "empty string" */ EditingUser.Name,
@@ -128,25 +138,25 @@ namespace wpf_mvvm_test.ViewModels
             //_database.Users.Add(newUser);
             //_database.SaveChanges();
             //LoadUsers();
+            #endregion
 
-            if (EditingUser == null ||
-            string.IsNullOrWhiteSpace(EditingUser.Name) ||
-            string.IsNullOrWhiteSpace(EditingUser.Email) ||
-            string.IsNullOrWhiteSpace(EditingUser.Password))
+            if (_tokenQueue.TryDequeue(out Token token))
             {
-                throw new InvalidOperationException("EditingUser is not properly initialized.");
+                var newUser = new User
+                {
+                    Name = EditingUser.Name,
+                    Email = EditingUser.Email,
+                    Password = EditingUser.Password
+                };
+
+                _database.Users.Add(newUser);
+                _database.SaveChanges();
+                LoadUsers();
             }
-
-            var newUser = new User
+            else
             {
-                Name = EditingUser.Name,
-                Email = EditingUser.Email,
-                Password = EditingUser.Password
-            };
-
-            _database.Users.Add(newUser);
-            _database.SaveChanges();
-            LoadUsers();
+                throw new Exception("no token is available please wait");
+            }
 
         }
 
@@ -181,6 +191,48 @@ namespace wpf_mvvm_test.ViewModels
                     Users.Where(x => x.Name.Contains(SearchQuery)));
             }
             OnPropertyChanged(nameof(FilteredUsers));
+        }
+
+        #endregion
+
+        private void StartTokenGeneration()
+        {
+            if (_isGenerating) return;
+            _isGenerating = true;
+            _thread = new Thread(() =>
+                {
+                    int tokensPerSecond = 10;
+                    // = int.Parse(ConfigurationManager.AppSettings["TokensPerSecond"]);
+                    //if (!int.TryParse(ConfigurationManager.AppSettings["TokensPerSecond"],out tokensPerSecond))
+                    //{
+                    //    tokensPerSecond = 1;
+                    //    throw new Exception("problem in app.config");
+                    //}
+                    while (_isGenerating)
+                    {
+                        for(int i =0; i < tokensPerSecond; i++)
+                        {
+                            _tokenQueue.Enqueue(
+                                new Token
+                                {
+                                    Value = Guid.NewGuid().ToString()
+                                }
+                                );
+                        }
+                        Thread.Sleep(1000);
+                    }
+                }
+                );
+            _thread.Start();
+        }
+
+        public void StopTokenGeneration()
+        {
+            _isGenerating = false;
+            if(_thread != null && _thread.IsAlive)
+            {
+                _thread.Join();
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

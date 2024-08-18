@@ -26,6 +26,7 @@ namespace wpf_mvvm_test
         {
             InitializeComponent();
             this.DataContext = new UserViewModel();
+            this.Closing += MainWindowClosing;
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
@@ -37,6 +38,15 @@ namespace wpf_mvvm_test
                 txtPassword.Text = string.Empty;
                 txtName.Text = string.Empty;
                 txtSearch.Text = string.Empty;
+            }
+        }
+
+        private void MainWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var model = this.DataContext as UserViewModel;
+            if(model != null )
+            {
+                model.StopTokenGeneration();
             }
         }
     }

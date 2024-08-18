@@ -127,6 +127,7 @@
       <HintPath>..\packages\System.ComponentModel.Annotations.4.7.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Common, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.Common.4.3.0\lib\net451\System.Data.Common.dll</HintPath>
@@ -181,6 +182,7 @@
       <DependentUpon>20240817073123_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDBContextModelSnapshot.cs" />
+    <Compile Include="Models\Token.cs" />
     <Compile Include="ViewModels\RelayCommands.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
     <Page Include="MainWindow.xaml">
