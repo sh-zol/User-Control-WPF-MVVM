@@ -128,7 +128,7 @@ namespace wpf_mvvm_test.ViewModels
 
         private void AddUser(object obj)
         {
-            #region Comment
+            #region Old method
             //var newUser = new User
             //{
             //    Name = /* "empty string" */ EditingUser.Name,
@@ -201,13 +201,13 @@ namespace wpf_mvvm_test.ViewModels
             _isGenerating = true;
             _thread = new Thread(() =>
                 {
-                    int tokensPerSecond = 10;
-                    // = int.Parse(ConfigurationManager.AppSettings["TokensPerSecond"]);
-                    //if (!int.TryParse(ConfigurationManager.AppSettings["TokensPerSecond"],out tokensPerSecond))
-                    //{
-                    //    tokensPerSecond = 1;
-                    //    throw new Exception("problem in app.config");
-                    //}
+                     int tokensPerSecond //= 10;
+                     = int.Parse(ConfigurationManager.AppSettings["TokensPerSecond"]);
+                    if (!int.TryParse(ConfigurationManager.AppSettings["TokensPerSecond"], out tokensPerSecond))
+                    {
+                        tokensPerSecond = 1;
+                        throw new Exception("problem in app.config");
+                    }
                     while (_isGenerating)
                     {
                         for(int i =0; i < tokensPerSecond; i++)
@@ -224,14 +224,18 @@ namespace wpf_mvvm_test.ViewModels
                 }
                 );
             _thread.Start();
+            var th = _thread.IsAlive;
+            var gn = _isGenerating;
         }
 
         public void StopTokenGeneration()
         {
             _isGenerating = false;
-            if(_thread != null && _thread.IsAlive)
+            if(_thread != null)
             {
                 _thread.Join();
+                
+                _thread = null;
             }
         }
 

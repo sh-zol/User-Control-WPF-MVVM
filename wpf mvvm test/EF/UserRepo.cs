@@ -25,7 +25,6 @@ namespace wpf_mvvm_test.EF
                 Name = user.Name,
                 Password = user.Password,
             };
-            
         }
 
         public void Delete(int id)
