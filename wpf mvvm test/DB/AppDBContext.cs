@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -46,12 +47,16 @@ namespace wpf_mvvm_test.DB
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer("Data Source=DESKTOP-DL0I6I3\\SHZSQLEXPRESSDB;Initial Catalog=MVVMTEST;Integrated Security=True;Connect Timeout=30;Encrypt=False;");
+            // var cString = Convert.ToString(ConfigurationManager.AppSettings["ConnectionString"]);
+            // optionsBuilder.UseSqlServer(cString);
+            optionsBuilder.UseMySql("Server=localhost;Database=MVVMTEST;User=Shahin;Password=SH@#!N19451960@#$zZz;Port=3306;");
+           // optionsBuilder.UseSqlServer("Data Source=DESKTOP-DL0I6I3\\SHZSQLEXPRESSDB;Initial Catalog=MVVMTEST;Integrated Security=True;Connect Timeout=30;Encrypt=False;");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new UserConfig());
+           // modelBuilder.ApplyConfiguration(new TokenConfig());
         }
     }
 }

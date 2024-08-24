@@ -3,10 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:wpf_mvvm_test"
+        xmlns:local="clr-namespace:wpf_mvvm_test.ViewModels" 
+        xmlns:local1="clr-namespace:wpf_mvvm_test.DB"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="967">
-    <Grid Margin="0,0,0,20">
+    <!--<Window.DataContext >
+        <local:UserViewModel />
+    </Window.DataContext>-->
+    <!--<Window.Resources >
+        <local:AppDBContext x:Key="_context" />
+        <ObjectDataProvider x:Key="UserViewModel" ObjectType="{x:Type local:UserViewModel}">
+            <ObjectDataProvider.ConstructorParameters>
+                <StaticResource ResourceKey="_context" />
+            </ObjectDataProvider.ConstructorParameters>
+        </ObjectDataProvider>-->
+    <!--</Window.Resources>-->
+    <Grid Margin="0,0,0,20" DataContext="{Binding Source={StaticResource UserViewModel}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -48,7 +60,5 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button Content="Clear" Height="22" Width="100" Margin="310,109,0,0" x:Name="btnClear" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="1" Click="btnClear_Click"/>
-
     </Grid>
 </Window>

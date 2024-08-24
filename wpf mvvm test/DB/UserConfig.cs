@@ -23,6 +23,12 @@ namespace wpf_mvvm_test.DB
             builder.Property(x=>x.Password)
                 .IsRequired()
                 .HasMaxLength(50);
+            builder.Property(x => x.TokenValue)
+                .HasMaxLength(36);
+            //builder.HasOne(x => x.Token)
+            //    .WithOne(x => x.User)
+            //    .HasForeignKey<Tokenn>(x=>x.UserId)
+            //    .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasData(
                 new List<User>
@@ -32,21 +38,24 @@ namespace wpf_mvvm_test.DB
                         Id = 1,
                         Name = "test",
                         Email = "testemail@gmail.com",
-                        Password = "12345"
+                        Password = "12345",
+                        TokenValue = Guid.NewGuid().ToString(),
                     },
                     new User
                     {
                         Id = 2,
                         Name = "test2",
                         Password= "12345",
-                        Email = "test2email@gmail.com"
+                        Email = "test2email@gmail.com",
+                        TokenValue = Guid.NewGuid().ToString(),
                     },
                     new User
                     {
                         Id = 3,
                         Name = "test3",
                         Email = "test3email@gmail.com",
-                        Password = "12345"
+                        Password = "12345",
+                        TokenValue = Guid.NewGuid().ToString(),
                     }
                 }
                 );

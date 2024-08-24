@@ -18,5 +18,8 @@ namespace wpf_mvvm_test.Models
        public string Email { get; set; }
         [StringLength(50)]
        public string Password { get; set; }
+        public string TokenValue {  get; set; }
+        //public Tokenn Token { get; set; }
+        //public int TokenId { get; set; }
     }
 }

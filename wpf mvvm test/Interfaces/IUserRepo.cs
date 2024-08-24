@@ -12,5 +12,6 @@ namespace wpf_mvvm_test.EF
         void Create(User user);
         void Update(User user);
         void Delete(int id);
+        List<User> GetAll();
     }
 }

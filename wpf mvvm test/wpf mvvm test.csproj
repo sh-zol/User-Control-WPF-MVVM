@@ -113,8 +113,17 @@
     <Reference Include="Microsoft.IdentityModel.Tokens, Version=5.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.Tokens.5.5.0\lib\net461\Microsoft.IdentityModel.Tokens.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="MySqlConnector, Version=0.61.0.0, Culture=neutral, PublicKeyToken=d33d3e53aa5f8c92, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySqlConnector.0.61.0\lib\net471\MySqlConnector.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Pomelo.EntityFrameworkCore.MySql, Version=3.1.1.0, Culture=neutral, PublicKeyToken=2cc498582444921b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Pomelo.EntityFrameworkCore.MySql.3.1.1\lib\netstandard2.0\Pomelo.EntityFrameworkCore.MySql.dll</HintPath>
+    </Reference>
+    <Reference Include="Pomelo.JsonObject, Version=2.2.1.0, Culture=neutral, PublicKeyToken=2cc498582444921b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Pomelo.JsonObject.2.2.1\lib\netstandard2.0\Pomelo.JsonObject.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -155,6 +164,7 @@
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -174,15 +184,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DB\TokenConfig.cs" />
     <Compile Include="DB\UserConfig.cs" />
-    <Compile Include="EF\IUserRepo.cs" />
+    <Compile Include="EF\UserService.cs" />
+    <Compile Include="Interfaces\IConfigReader.cs" />
+    <Compile Include="Interfaces\ITokenGenerator.cs" />
+    <Compile Include="Interfaces\IUserRepo.cs" />
     <Compile Include="EF\UserRepo.cs" />
-    <Compile Include="Migrations\20240817073123_init.cs" />
-    <Compile Include="Migrations\20240817073123_init.Designer.cs">
-      <DependentUpon>20240817073123_init.cs</DependentUpon>
+    <Compile Include="Interfaces\IUserService.cs" />
+    <Compile Include="Migrations\20240824094043_init.cs" />
+    <Compile Include="Migrations\20240824094043_init.Designer.cs">
+      <DependentUpon>20240824094043_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDBContextModelSnapshot.cs" />
-    <Compile Include="Models\Token.cs" />
+    <Compile Include="Models\Tokenn.cs" />
+    <Compile Include="TokenService\ConfigReader.cs" />
+    <Compile Include="TokenService\TokenGenerator.cs" />
     <Compile Include="ViewModels\RelayCommands.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
     <Page Include="MainWindow.xaml">

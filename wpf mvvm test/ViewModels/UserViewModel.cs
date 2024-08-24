@@ -12,31 +12,36 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using wpf_mvvm_test.DB;
+using wpf_mvvm_test.Interfaces;
 using wpf_mvvm_test.Models;
 
 namespace wpf_mvvm_test.ViewModels
 {
-    public class UserViewModel : INotifyPropertyChanged
+    public class UserViewModel : INotifyPropertyChanged, IDisposable
     {
         private AppDBContext _database;
         private User _selectingUser;
         private User _editingUser;
         private string _searchQuery;
-        private readonly ConcurrentQueue<Token> _tokenQueue = new ConcurrentQueue<Token>();
+        private readonly ConcurrentQueue<Tokenn> _tokenQueue = new ConcurrentQueue<Tokenn>();
         private bool _isGenerating = false;
         private Thread _thread;
+        private readonly IUserService _service;
 
-        public UserViewModel()
+        public UserViewModel(IUserService service)
         {
-            _database = new AppDBContext();
+           // _database = new AppDBContext();
             // _database.Database.EnsureCreated();
+            _service = service;
+            // Users = new ObservableCollection<User>(_service.GetAll());
             LoadUsers();
             EditingUser = new User();
-            StartTokenGeneration();
+            //StartTokenGeneration();
             UpdateCommand = new RelayCommands(UpdateUser);
             AddCommand = new RelayCommands(AddUser);
             DeleteCommand = new RelayCommands(DeleteUser);
             SearchCommand = new RelayCommands(SearchWord);
+            
         }
 
         public ObservableCollection<User> Users { get; set; } = new ObservableCollection<User>();
@@ -52,7 +57,7 @@ namespace wpf_mvvm_test.ViewModels
             set
             {
                 _selectingUser = value;
-                if(_selectingUser != null)
+                if (_selectingUser != null)
                 {
                     EditingUser = new User()
                     {
@@ -60,9 +65,12 @@ namespace wpf_mvvm_test.ViewModels
                         Email = _selectingUser.Email,
                         Password = _selectingUser.Password,
                         Id = _selectingUser.Id,
+                        TokenValue = _selectingUser.TokenValue,
                     };
                 }
                 OnPropertyChanged(nameof(SelectedUser));
+                
+
             }
         }
 
@@ -89,7 +97,7 @@ namespace wpf_mvvm_test.ViewModels
             {
                 _searchQuery = value;
                 OnPropertyChanged(nameof(SearchQuery));
-                
+
             }
         }
 
@@ -101,29 +109,36 @@ namespace wpf_mvvm_test.ViewModels
         #region Queries
         private void LoadUsers()
         {
-            Users.Clear();
-            foreach (var user in _database.Users.AsNoTracking().ToList())
+            var list = _service.GetAll();
+            if (list != null)
             {
-                Users.Add(user);
+                Users.Clear();
+                foreach (var user in list)
+                {
+                    Users.Add(user);
+                }
             }
         }
 
         private void UpdateUser(object user)
         {
-            var update = _database.Users.FirstOrDefault(x=>x.Id == SelectedUser.Id);
-            if (update != null)
-            {
-               // update.Id == EditingUser.Id;
-                update.Email = EditingUser.Email;
-                update.Password = EditingUser.Password;
-                update.Name = EditingUser.Name;
-                _database.SaveChanges();
-                LoadUsers();
-            }
-            else
-            {
-                throw new Exception("user doesn't exist");
-            }
+            #region old method
+            //var update = _database.Users.FirstOrDefault(x=>x.Id == SelectedUser.Id);
+            //if (update != null)
+            //{
+            //   // update.Id == EditingUser.Id;
+            //    update.Email = EditingUser.Email;
+            //    update.Password = EditingUser.Password;
+            //    update.Name = EditingUser.Name;
+            //    _database.SaveChanges();
+            //    LoadUsers();
+            //}
+            //else
+            //{
+            //    throw new Exception("user doesn't exist");
+            //}
+            #endregion
+            _service.Update(SelectedUser);
         }
 
         private void AddUser(object obj)
@@ -140,43 +155,57 @@ namespace wpf_mvvm_test.ViewModels
             //LoadUsers();
             #endregion
 
-            if (_tokenQueue.TryDequeue(out Token token))
-            {
-                var newUser = new User
-                {
-                    Name = EditingUser.Name,
-                    Email = EditingUser.Email,
-                    Password = EditingUser.Password
-                };
+            #region old method 2
+            //if (_tokenQueue.TryDequeue(out Tokenn token))
+            //{
+            //    var newUser = new User
+            //    {
+            //        Name = EditingUser.Name,
+            //        Email = EditingUser.Email,
+            //        Password = EditingUser.Password
+            //    };
 
-                _database.Users.Add(newUser);
-                _database.SaveChanges();
-                LoadUsers();
-            }
-            else
+            //    _database.Users.Add(newUser);
+            //    _database.SaveChanges();
+            //    LoadUsers();
+            //}
+            //else
+            //{
+            //    throw new Exception("no token is available please wait");
+            //}
+            #endregion
+            var user = new User()
             {
-                throw new Exception("no token is available please wait");
-            }
+                Id = SelectedUser.Id,
+                Email = EditingUser.Email,
+                Name = EditingUser.Name,
+                Password = EditingUser.Password,
+            };
 
+            _service.Create(user);
         }
 
 
         private void DeleteUser(object user)
         {
-            if(SelectedUser != null)
-            {
-                var delete = _database.Users.FirstOrDefault(x => x.Id == SelectedUser.Id);
-                if(delete != null)
-                {
-                    _database.Users.Remove(delete);
-                    _database.SaveChanges();
-                    LoadUsers();
-                }
-                else
-                {
-                    throw new Exception("User doesn't exist");
-                }
-            }
+            #region old method
+            //if(SelectedUser != null)
+            //{
+            //    var delete = _database.Users.FirstOrDefault(x => x.Id == SelectedUser.Id);
+            //    if(delete != null)
+            //    {
+            //        _database.Users.Remove(delete);
+            //        _database.SaveChanges();
+            //        LoadUsers();
+            //    }
+            //    else
+            //    {
+            //        throw new Exception("User doesn't exist");
+            //    }
+            //}
+            #endregion
+
+            _service.Delete(SelectedUser.Id);
         }
 
         private void SearchWord(object words)
@@ -195,54 +224,67 @@ namespace wpf_mvvm_test.ViewModels
 
         #endregion
 
-        private void StartTokenGeneration()
-        {
-            if (_isGenerating) return;
-            _isGenerating = true;
-            _thread = new Thread(() =>
-                {
-                     int tokensPerSecond //= 10;
-                     = int.Parse(ConfigurationManager.AppSettings["TokensPerSecond"]);
-                    if (!int.TryParse(ConfigurationManager.AppSettings["TokensPerSecond"], out tokensPerSecond))
-                    {
-                        tokensPerSecond = 1;
-                        throw new Exception("problem in app.config");
-                    }
-                    while (_isGenerating)
-                    {
-                        for(int i =0; i < tokensPerSecond; i++)
-                        {
-                            _tokenQueue.Enqueue(
-                                new Token
-                                {
-                                    Value = Guid.NewGuid().ToString()
-                                }
-                                );
-                        }
-                        Thread.Sleep(1000);
-                    }
-                }
-                );
-            _thread.Start();
-            var th = _thread.IsAlive;
-            var gn = _isGenerating;
-        }
+        #region old token generator method
+        //private void StartTokenGeneration()
+        //{
+        //    if (_isGenerating) return;
+        //    _isGenerating = true;
+        //    _thread = new Thread(() =>
+        //        {
+        //             int tokensPerSecond //= 10;
+        //             = int.Parse(ConfigurationManager.AppSettings["TokensPerSecond"]);
+        //            if (!int.TryParse(ConfigurationManager.AppSettings["TokensPerSecond"], out tokensPerSecond))
+        //            {
+        //                tokensPerSecond = 1;
+        //                throw new Exception("problem in app.config");
+        //            }
+        //            while (_isGenerating)
+        //            {
+        //                for(int i =0; i < tokensPerSecond; i++)
+        //                {
+        //                    _tokenQueue.Enqueue(
+        //                        new Tokenn
+        //                        {
+        //                            Value = Guid.NewGuid().ToString()
+        //                        }
+        //                        );
+        //                }
+        //                Thread.Sleep(1000);
+        //            }
+        //        }
+        //        );
+        //    _thread.Start();
+        //    var th = _thread.IsAlive;
+        //    var gn = _isGenerating;
+        //}
 
-        public void StopTokenGeneration()
-        {
-            _isGenerating = false;
-            if(_thread != null)
-            {
-                _thread.Join();
-                
-                _thread = null;
-            }
-        }
+        //public void StopTokenGeneration()
+        //{
+        //    _isGenerating = false;
+        //    if (_thread != null)
+        //    {
+        //        _thread.Join();
+
+        //        _thread = null;
+        //    }
+        //}
+        #endregion
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private bool CanExecuteUpdateOrDelete()
+        {
+            return SelectedUser != null;
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }
