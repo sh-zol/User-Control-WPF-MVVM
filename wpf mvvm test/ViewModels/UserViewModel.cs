@@ -176,7 +176,7 @@ namespace wpf_mvvm_test.ViewModels
             #endregion
             var user = new User()
             {
-                Id = SelectedUser.Id,
+               // Id = SelectedUser.Id,
                 Email = EditingUser.Email,
                 Name = EditingUser.Name,
                 Password = EditingUser.Password,
