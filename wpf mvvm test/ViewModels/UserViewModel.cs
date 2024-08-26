@@ -18,18 +18,18 @@ namespace wpf_mvvm_test.ViewModels
 {
     public class UserViewModel : INotifyPropertyChanged
     {
-        private AppDBContext _database;
+       // private AppDBContext _database;
         private User _selectingUser;
         private User _editingUser;
         private string _searchQuery;
-        private readonly ConcurrentQueue<Token> _tokenQueue = new ConcurrentQueue<Token>();
-        private bool _isGenerating = false;
-        private Thread _thread;
+        private readonly ConcurrentQueue<Tokenn> _tokenQueue = new ConcurrentQueue<Tokenn>();
+        private readonly IUserService _service;
+        private readonly ITokenRepo _tokenRepo;
 
         public UserViewModel()
         {
-            _database = new AppDBContext();
-            // _database.Database.EnsureCreated();
+            _service = service;
+            // Users = new ObservableCollection<User>(_service.GetAll());
             LoadUsers();
             EditingUser = new User();
             UpdateCommand = new RelayCommands(UpdateUser);
