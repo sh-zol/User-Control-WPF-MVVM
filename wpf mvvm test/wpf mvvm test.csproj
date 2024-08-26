@@ -186,15 +186,17 @@
     </ApplicationDefinition>
     <Compile Include="DB\TokenConfig.cs" />
     <Compile Include="DB\UserConfig.cs" />
+    <Compile Include="EF\TokenRepo.cs" />
     <Compile Include="EF\UserService.cs" />
     <Compile Include="Interfaces\IConfigReader.cs" />
     <Compile Include="Interfaces\ITokenGenerator.cs" />
+    <Compile Include="Interfaces\ITokenRepo.cs" />
     <Compile Include="Interfaces\IUserRepo.cs" />
     <Compile Include="EF\UserRepo.cs" />
     <Compile Include="Interfaces\IUserService.cs" />
-    <Compile Include="Migrations\20240824094043_init.cs" />
-    <Compile Include="Migrations\20240824094043_init.Designer.cs">
-      <DependentUpon>20240824094043_init.cs</DependentUpon>
+    <Compile Include="Migrations\20240826090942_init.cs" />
+    <Compile Include="Migrations\20240826090942_init.Designer.cs">
+      <DependentUpon>20240826090942_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDBContextModelSnapshot.cs" />
     <Compile Include="Models\Tokenn.cs" />

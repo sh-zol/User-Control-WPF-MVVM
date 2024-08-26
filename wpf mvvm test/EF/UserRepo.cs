@@ -28,7 +28,7 @@ namespace wpf_mvvm_test.EF
                 Email = user.Email,
                 Name = user.Name,
                 Password = user.Password,
-                TokenValue = user.TokenValue
+                //TokenValue = user.TokenValue
             };
             _context.Users.Add(person);
             _context.SaveChanges();

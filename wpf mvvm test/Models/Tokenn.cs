@@ -11,7 +11,7 @@ namespace wpf_mvvm_test.Models
     {
         [Key]
         public int Id { get; set; }
-        public string Value { get; set; }
+        public int Value { get; set; }
         //public User User { get; set; }
         //public int UserId { get; set; }
     }

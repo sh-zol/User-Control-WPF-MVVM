@@ -14,34 +14,35 @@ using System.Windows.Input;
 using wpf_mvvm_test.DB;
 using wpf_mvvm_test.Interfaces;
 using wpf_mvvm_test.Models;
+using wpf_mvvm_test.Token;
 
 namespace wpf_mvvm_test.ViewModels
 {
     public class UserViewModel : INotifyPropertyChanged, IDisposable
     {
-        private AppDBContext _database;
+       // private AppDBContext _database;
         private User _selectingUser;
         private User _editingUser;
         private string _searchQuery;
         private readonly ConcurrentQueue<Tokenn> _tokenQueue = new ConcurrentQueue<Tokenn>();
-        private bool _isGenerating = false;
-        private Thread _thread;
+       // private readonly ITokenGenerator _tokenGen; 
+       // private bool _isGenerating = false;
+       // private Thread _thread;
         private readonly IUserService _service;
+        private readonly ITokenRepo _tokenRepo;
 
-        public UserViewModel(IUserService service)
+        public UserViewModel(IUserService service, ITokenRepo tokenRepo)
         {
-           // _database = new AppDBContext();
-            // _database.Database.EnsureCreated();
             _service = service;
+           // _tokenGen = tokenGenerator;
             // Users = new ObservableCollection<User>(_service.GetAll());
             LoadUsers();
             EditingUser = new User();
-            //StartTokenGeneration();
             UpdateCommand = new RelayCommands(UpdateUser);
             AddCommand = new RelayCommands(AddUser);
             DeleteCommand = new RelayCommands(DeleteUser);
             SearchCommand = new RelayCommands(SearchWord);
-            
+            _tokenRepo = tokenRepo;
         }
 
         public ObservableCollection<User> Users { get; set; } = new ObservableCollection<User>();
@@ -65,7 +66,7 @@ namespace wpf_mvvm_test.ViewModels
                         Email = _selectingUser.Email,
                         Password = _selectingUser.Password,
                         Id = _selectingUser.Id,
-                        TokenValue = _selectingUser.TokenValue,
+                        //TokenValue = _selectingUser.TokenValue,
                     };
                 }
                 OnPropertyChanged(nameof(SelectedUser));
@@ -181,8 +182,9 @@ namespace wpf_mvvm_test.ViewModels
                 Name = EditingUser.Name,
                 Password = EditingUser.Password,
             };
-
             _service.Create(user);
+            _tokenRepo.DecreaseToken();
+            
         }
 
 

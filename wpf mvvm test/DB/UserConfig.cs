@@ -23,8 +23,8 @@ namespace wpf_mvvm_test.DB
             builder.Property(x=>x.Password)
                 .IsRequired()
                 .HasMaxLength(50);
-            builder.Property(x => x.TokenValue)
-                .HasMaxLength(36);
+            //builder.Property(x => x.TokenValue)
+            //    .HasMaxLength(36);
             //builder.HasOne(x => x.Token)
             //    .WithOne(x => x.User)
             //    .HasForeignKey<Tokenn>(x=>x.UserId)
@@ -39,7 +39,7 @@ namespace wpf_mvvm_test.DB
                         Name = "test",
                         Email = "testemail@gmail.com",
                         Password = "12345",
-                        TokenValue = Guid.NewGuid().ToString(),
+                       // TokenValue = Guid.NewGuid().ToString(),
                     },
                     new User
                     {
@@ -47,7 +47,7 @@ namespace wpf_mvvm_test.DB
                         Name = "test2",
                         Password= "12345",
                         Email = "test2email@gmail.com",
-                        TokenValue = Guid.NewGuid().ToString(),
+                    //    TokenValue = Guid.NewGuid().ToString(),
                     },
                     new User
                     {
@@ -55,7 +55,7 @@ namespace wpf_mvvm_test.DB
                         Name = "test3",
                         Email = "test3email@gmail.com",
                         Password = "12345",
-                        TokenValue = Guid.NewGuid().ToString(),
+                     //   TokenValue = Guid.NewGuid().ToString(),
                     }
                 }
                 );

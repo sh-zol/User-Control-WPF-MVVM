@@ -13,27 +13,11 @@ namespace wpf_mvvm_test.DB
     {
         public void Configure(EntityTypeBuilder<Tokenn> builder)
         {
-            //builder.HasData(new List<Tokenn>
-            //{
-            //    new Tokenn
-            //    {
-            //        Id = 1,
-            //        UserId = 1,
-            //        Value = Guid.NewGuid().ToString(),
-            //    },
-            //    new Tokenn
-            //    {
-            //        Id = 2,
-            //        UserId = 2,
-            //        Value = Guid.NewGuid().ToString(),
-            //    },
-            //    new Tokenn
-            //    {
-            //        Id = 3,
-            //        UserId = 3,
-            //        Value = Guid.NewGuid().ToString(),
-            //    }
-            //});
+            builder.HasData(new Tokenn
+            {
+                Id = 1,
+                Value = 10
+            });
         }
     }
 }

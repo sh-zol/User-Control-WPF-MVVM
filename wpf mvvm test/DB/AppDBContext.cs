@@ -43,6 +43,7 @@ namespace wpf_mvvm_test.DB
             
         }
         public DbSet<User> Users { get; set; }
+        public DbSet<Tokenn> Tokenns { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -50,13 +51,13 @@ namespace wpf_mvvm_test.DB
             // var cString = Convert.ToString(ConfigurationManager.AppSettings["ConnectionString"]);
             // optionsBuilder.UseSqlServer(cString);
             optionsBuilder.UseMySql("Server=localhost;Database=MVVMTEST;User=Shahin;Password=SH@#!N19451960@#$zZz;Port=3306;");
-           // optionsBuilder.UseSqlServer("Data Source=DESKTOP-DL0I6I3\\SHZSQLEXPRESSDB;Initial Catalog=MVVMTEST;Integrated Security=True;Connect Timeout=30;Encrypt=False;");
+            // optionsBuilder.UseSqlServer("Data Source=DESKTOP-DL0I6I3\\SHZSQLEXPRESSDB;Initial Catalog=MVVMTEST;Integrated Security=True;Connect Timeout=30;Encrypt=False;");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new UserConfig());
-           // modelBuilder.ApplyConfiguration(new TokenConfig());
+            modelBuilder.ApplyConfiguration(new TokenConfig());
         }
     }
 }

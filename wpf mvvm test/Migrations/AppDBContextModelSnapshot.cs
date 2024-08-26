@@ -16,6 +16,27 @@ namespace wpf_mvvm_test.Migrations
                 .HasAnnotation("ProductVersion", "3.1.32")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("wpf_mvvm_test.Models.Tokenn", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tokenns");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Value = 10
+                        });
+                });
+
             modelBuilder.Entity("wpf_mvvm_test.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -37,10 +58,6 @@ namespace wpf_mvvm_test.Migrations
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
                         .HasMaxLength(50);
 
-                    b.Property<string>("TokenValue")
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
-                        .HasMaxLength(36);
-
                     b.HasKey("Id");
 
                     b.ToTable("Users");
@@ -51,24 +68,21 @@ namespace wpf_mvvm_test.Migrations
                             Id = 1,
                             Email = "testemail@gmail.com",
                             Name = "test",
-                            Password = "12345",
-                            TokenValue = "d6ce67f2-0915-4298-bce8-aa00d8472a59"
+                            Password = "12345"
                         },
                         new
                         {
                             Id = 2,
                             Email = "test2email@gmail.com",
                             Name = "test2",
-                            Password = "12345",
-                            TokenValue = "12152273-dc8e-4cb2-a2d1-6599b91b976f"
+                            Password = "12345"
                         },
                         new
                         {
                             Id = 3,
                             Email = "test3email@gmail.com",
                             Name = "test3",
-                            Password = "12345",
-                            TokenValue = "cfdb36d4-de14-42c9-8ca1-1f3f2ef78845"
+                            Password = "12345"
                         });
                 });
 #pragma warning restore 612, 618

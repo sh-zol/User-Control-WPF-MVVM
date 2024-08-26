@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using wpf_mvvm_test.Models;
 
 namespace wpf_mvvm_test.Interfaces
 {
-    public interface ITokenGenerator
+    public interface ITokenRepo
     {
-        void StartGenerating();
-        void StopGenerating();
-        void GeneratingToken();
+        Tokenn GetToken();
+        void DecreaseToken();
     }
 }

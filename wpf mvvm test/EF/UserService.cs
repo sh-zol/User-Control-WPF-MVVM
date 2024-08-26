@@ -20,15 +20,9 @@ namespace wpf_mvvm_test.EF
 
         public void Create(User user)
         {
-            if(_tokenGenerator.TryGetToken(out string value))
-            {
-                user.TokenValue = value;
+                //user.TokenValue = value;
                 _repo.Create(user);
-            }
-            else
-            {
-                throw new Exception("error occured");
-            }
+               // throw new Exception("error occured");
         }
 
         public void Delete(int id)

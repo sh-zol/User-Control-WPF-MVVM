@@ -16,25 +16,16 @@ namespace wpf_mvvm_test.Token
         private bool _isGenerating;
         private Thread _thread;
         private readonly int _interval;
-        public TokenGenerator(IConfigReader config)
+        private readonly ITokenRepo _repo;
+        public TokenGenerator(IConfigReader config, ITokenRepo repo)
         {
             _interval = config.TokenGeneratorInt();
+            _repo = repo;
         }
         public void StartGenerating()
         {
-            if(_isGenerating)
-                 _isGenerating = true;
-            _thread = new Thread(() =>
-            {
-                while(_isGenerating)
-                {
-                    for(int i = 0 ; i < _tokens.Count; i++)
-                    {
-                        _tokens.Enqueue(Guid.NewGuid().ToString());
-                    }
-                    Thread.Sleep(_interval);
-                }
-            });
+            _isGenerating = true;
+            _thread = new Thread(GeneratingToken);
             _thread.Start();
         }
 
@@ -44,9 +35,13 @@ namespace wpf_mvvm_test.Token
             _thread?.Join();
         }
 
-        public bool TryGetToken(out string value)
+        public void GeneratingToken()
         {
-            return _tokens.TryDequeue(out value);   
+            while(_isGenerating)
+            {
+                _repo.DecreaseToken();
+                Thread.Sleep(1000 / _interval);
+            }
         }
     }
 }
