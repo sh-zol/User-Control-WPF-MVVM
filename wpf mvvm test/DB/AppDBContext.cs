@@ -42,16 +42,19 @@ namespace wpf_mvvm_test.DB
             
         }
         public DbSet<User> Users { get; set; }
+        public DbSet<Token> Tokens { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer("Data Source=DESKTOP-DL0I6I3\\SHZSQLEXPRESSDB;Initial Catalog=MVVMTEST;Integrated Security=True;Connect Timeout=30;Encrypt=False;");
+            optionsBuilder.UseMySql("Server=localhost;Database=MVVMTEST(Task);User=Shahin;Password=SH@#!N19451960@#$zZz;Port=3306;");
+           // optionsBuilder.UseSqlServer("Data Source=DESKTOP-DL0I6I3\\SHZSQLEXPRESSDB;Initial Catalog=MVVMTEST;Integrated Security=True;Connect Timeout=30;Encrypt=False;");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new UserConfig());
+            modelBuilder.ApplyConfiguration(new TokenConfig());
         }
     }
 }

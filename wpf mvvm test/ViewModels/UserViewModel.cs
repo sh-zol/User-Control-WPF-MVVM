@@ -32,8 +32,6 @@ namespace wpf_mvvm_test.ViewModels
             // _database.Database.EnsureCreated();
             LoadUsers();
             EditingUser = new User();
-            //  StartTokenGeneration();
-            StartTokenGenerator();
             UpdateCommand = new RelayCommands(UpdateUser);
             AddCommand = new RelayCommands(AddUser);
             DeleteCommand = new RelayCommands(DeleteUser);
@@ -237,26 +235,7 @@ namespace wpf_mvvm_test.ViewModels
         //}
         #endregion
 
-        private void StartTokenGenerator()
-        {
-            if (_isGenerating) return;
-            _isGenerating = true;
-            Task.Run(async () => {
-                int tokensPerSecond = 10;
-                while (_isGenerating)
-                {
-                    for(int i = 0; i < tokensPerSecond; i++)
-                    {
-                        _tokenQueue.Enqueue(new Token
-                        {
-                            Value = Guid.NewGuid().ToString(),
-                        });
-                    }
-                    await Task.Delay(1000);
-                }
-                }
-            );
-        }
+        
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
