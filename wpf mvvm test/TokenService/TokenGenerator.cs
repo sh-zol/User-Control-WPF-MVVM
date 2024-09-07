@@ -39,7 +39,7 @@ namespace wpf_mvvm_test.Token
         {
             while(_isGenerating)
             {
-                _repo.DecreaseToken();
+                _repo.AddToken();
                 Thread.Sleep(1000 / _interval);
             }
         }
