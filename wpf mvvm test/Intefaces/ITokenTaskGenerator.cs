@@ -8,5 +8,8 @@ namespace wpf_mvvm_test.Intefaces
 {
     public interface ITokenGenerator
     {
+        Task StartGenerating();
+        void Generating();
+        void StopGenerating();
     }
 }
