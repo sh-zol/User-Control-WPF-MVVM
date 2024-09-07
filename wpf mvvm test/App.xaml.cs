@@ -16,31 +16,31 @@ using wpf_mvvm_test.ViewModels;
 
 namespace wpf_mvvm_test
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
-    {
-        private readonly IServiceProvider _serviceProvider;
-        // private readonly UserViewModel userViewModel;
+    private IServiceProvider _serviceProvider;
         
         public App()
         {
-            var services = new ServiceCollection();
-            ConfigureServices(services);
-            _serviceProvider = services.BuildServiceProvider();
+            ConfigureServices();
         }
 
-        private void ConfigureServices(IServiceCollection services)
+        private void ConfigureServices()
         {
+            var services = new ServiceCollection();
             services.AddSingleton<IConfigReader, ConfigReader>();
-            services.AddSingleton<ITokenGenerator, TokenGenerator>();
             services.AddScoped<ITokenRepo, TokenRepo>();
-            services.AddSingleton<IUserService,UserService>();
+            services.AddSingleton<IUserService, UserService>();
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddDbContext<AppDBContext>();
             services.AddTransient<UserViewModel>();
             services.AddTransient<MainWindow>();
+            var db = new AppDBContext();
+            IUserRepo _userRepo = new UserRepo(db);
+            ITokenRepo _tokenRepo = new TokenRepo(db);
+            IConfigReader _config = new ConfigReader();
+            IUserService _userService = new UserService(_userRepo);
+            UserViewModel _viewModel = new UserViewModel(_userService, _tokenRepo);
+            services.AddSingleton(typeof(UserViewModel), _viewModel);
+            _serviceProvider = services.BuildServiceProvider();
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -48,13 +48,7 @@ namespace wpf_mvvm_test
             
             base.OnStartup(e);
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-            var db = new AppDBContext();
-            IUserRepo _userRepo = new UserRepo(db);
-            ITokenRepo _tokenRepo = new TokenRepo(db);
-            IConfigReader _config = new ConfigReader();
-            ITokenGenerator _tokenGen = new TokenGenerator(_config,_tokenRepo);
-            IUserService _userService = new UserService(_userRepo, _tokenGen);
-            UserViewModel _viewModel = new UserViewModel(_userService,_tokenRepo);
+            var _viewModel = _serviceProvider.GetRequiredService<UserViewModel>();
             mainWindow.DataContext = _viewModel;
             mainWindow.Show();
             #region old 
@@ -63,6 +57,11 @@ namespace wpf_mvvm_test
             //window.DataContext = model;
             //window.Show();
             #endregion
+        }
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+            
         }
     }
 }
