@@ -18,13 +18,22 @@ namespace wpf_mvvm_test.EF
             _context = context;
         }
 
+        public void AddToken()
+        {
+            var token = _context.Tokenns.FirstOrDefault();
+            if(token != null)
+            {
+                token.Value++;
+                _context.SaveChanges();
+            }
+        }
+        
         public void DecreaseToken()
         {
             var token = _context.Tokenns.FirstOrDefault();
             if(token != null && token.Value > 0)
             {
                 token.Value--;
-                var tokenCount = token.Value;
                 _context.SaveChanges();
             }
         }
