@@ -11,5 +11,6 @@ namespace wpf_mvvm_test.Interfaces
     {
         Tokenn GetToken();
         void DecreaseToken();
+        void AddToken();
     }
 }
