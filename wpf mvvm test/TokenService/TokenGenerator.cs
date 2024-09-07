@@ -12,7 +12,6 @@ namespace wpf_mvvm_test.Token
 {
     public class TokenGenerator : ITokenGenerator
     {
-        private readonly ConcurrentQueue<string> _tokens = new ConcurrentQueue<string>();
         private bool _isGenerating;
         private Thread _thread;
         private readonly int _interval;
